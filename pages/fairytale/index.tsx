@@ -20,21 +20,21 @@ const StoriesPage = ({ fairytales }: PageProps) => {
             Eventyr
           </h1>
           <div className="grid grid-cols-4 gap-4">
-            {/* {fairytales.map((fairytale, i) => (
+            {fairytales.map((fairytale, i) => (
               <Link href={`/fairytale/${fairytale.slug}`} key={i}>
                 <div className="relative aspect-1">
-                  <Image
-                    src={urlForImage(fairytale.coverImage).url()}
+                  {fairytale.coverImage && <Image
+                    src={urlForImage(fairytale.coverImage)?.url()}
                     alt=""
                     className="object-cover w-full h-full rounded-lg"
                     fill
-                  />
+                  />}
                 </div>
                 <h2 className="text-2xl font-bold text-center text-gray-800">
                   {fairytale.title}
                 </h2>
               </Link>
-            ))} */}
+            ))}
           </div>
         </section>
       </main>

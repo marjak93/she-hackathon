@@ -14,26 +14,16 @@ interface Query {
   [key: string]: string
 }
 
-const generateNewStoryImage = async () => {
-  // Add your code here
-}
-
-const handleGenerateStory = async () => {
-  // Add your code here
-}
-
 const FairtalePage = ({ fairytale }: PageProps) => {
   const [storyImage, setStoryImage] = useState<any>('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const { title, story, copiedPrompt } = fairytale;
-
-
-
+  const { title, generateText, copiedPrompt } = fairytale;
 
   const generateNewStoryImage = async () => {
     // Add code here to genereate a new story image based on sanity data, be creative!
-    const imagePromt = title
+    const imagePromt = `Kan du lage en fantasi verden som omhandler denne ${title} men som har med seg denne prompt-en også ${copiedPrompt}`
+    setStoryImage("")
 
     try {
       const response = await fetch('/api/openai-image', {
@@ -48,7 +38,6 @@ const FairtalePage = ({ fairytale }: PageProps) => {
 
       if (response.text) {
         setStoryImage(response.text)
-
       } else {
         console.log('error')
       }
@@ -71,7 +60,7 @@ const FairtalePage = ({ fairytale }: PageProps) => {
       <main className="pb-10">
         <div className='w-1/2 m-auto'>
           <h1 className='mt-8'>{title}</h1>
-          <p className='mt-20'>{story}</p>
+          <p className='mt-20'>{generateText}</p>
           <button
             className="p-10 m-5 text-white bg-red-900 rounded-md"
             onClick={handleGenerateImage}
@@ -83,7 +72,7 @@ const FairtalePage = ({ fairytale }: PageProps) => {
 
 
           {storyImage &&
-            <Image src={storyImage} alt="" width={256} height={256} />
+            <Image src={storyImage} alt="" width={1024} height={1024} className='border' />
           }
         </div>
       </main>

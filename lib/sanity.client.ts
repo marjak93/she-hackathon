@@ -34,7 +34,7 @@ export async function getAllFairytales(): Promise<iFairytale[]> {
 export async function getFairytale(slug: string) {
   // get the fairytale by slug from sanity
   const results = await client.fetch(
-    `*[_type == "fairytale" && slug.current == $slug]{ _id, title, 'slug': slug.current, coverImage, generateText, story}[0]`,
+    `*[_type == "fairytale" && slug.current == $slug]{ _id, title, 'slug': slug.current, coverImage, generateText, story, copiedPrompt}[0]`,
     {
       slug,
     }
