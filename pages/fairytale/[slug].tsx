@@ -15,15 +15,27 @@ interface Query {
 }
 
 const FairtalePage = ({ fairytale }: PageProps) => {
-  const [storyImage, setStoryImage] = useState<any>('')
+  const [storyImages, setStoryImages] = useState<any>([])
   const [isLoading, setIsLoading] = useState(false)
 
-  const { title, generateText, copiedPrompt } = fairytale;
+  const { title, generateText, copiedPrompt } = fairytale
 
-  const generateNewStoryImage = async () => {
+  const generateNewStoryImage = async (a, b, c) => {
     // Add code here to genereate a new story image based on sanity data, be creative!
-    const imagePromt = `Kan du lage en fantasi verden som omhandler denne ${title} men som har med seg denne prompt-en også ${copiedPrompt}`
-    setStoryImage("")
+
+    let imagePromt: string
+
+    if (!a) {
+      imagePromt = `Can write a chapter of a story about a fantasy world that involves ${title}.`
+    }
+
+    if (!c) {
+      imagePromt = `Can write a chapter of a story about a fantasy world that involves ${title}. In the previous chapter the events of ${a} happened. This is the final chapter.`
+    }
+
+    imagePromt = `Can write a chapter of a story about a fantasy world that involves ${title}. In the previous chapter the events of ${a} happened. In this chapter, the events of ${b} happen. In the next chapter, ${c} happens.`
+
+    setStoryImages([])
 
     try {
       const response = await fetch('/api/openai-image', {
@@ -37,7 +49,7 @@ const FairtalePage = ({ fairytale }: PageProps) => {
       }).then((res) => res.json())
 
       if (response.text) {
-        setStoryImage(response.text)
+        return response.text
       } else {
         console.log('error')
       }
@@ -46,11 +58,24 @@ const FairtalePage = ({ fairytale }: PageProps) => {
     }
   }
 
-  const handleGenerateImage = async () => {
+  const handleGenerateImages = async () => {
     setIsLoading(true)
-    if (title) {
-      await generateNewStoryImage()
-    }
+
+    const prompts = generateText
+      .split('. ')
+      .map((p) => p.split('! ').map((p) => p + '!'))
+      .flat()
+      .slice(0, -1)
+
+    const images = await Promise.all(
+      prompts.map(async (_, i, arr) => ({
+        prompt: arr[i],
+        image: await generateNewStoryImage(arr[i - 1], arr[i], arr[i + 1]),
+      }))
+    )
+
+    setStoryImages(images)
+
     setIsLoading(false)
   }
 
@@ -58,22 +83,31 @@ const FairtalePage = ({ fairytale }: PageProps) => {
     <>
       <NavigationBar />
       <main className="pb-10">
-        <div className='w-1/2 m-auto'>
-          <h1 className='mt-8'>{title}</h1>
-          <p className='mt-20'>{generateText}</p>
+        <div className="w-1/2 m-auto">
+          <h1 className="mt-8">{title}</h1>
+          <p className="mt-20">{generateText}</p>
           <button
             className="p-10 m-5 text-white bg-red-900 rounded-md"
-            onClick={handleGenerateImage}
+            onClick={handleGenerateImages}
           >
             Generate image
           </button>
           {isLoading && <p>Loading...</p>}
 
-
-
-          {storyImage &&
-            <Image src={storyImage} alt="" width={1024} height={1024} className='border' />
-          }
+          {storyImages.map((storyImage) => (
+            <div key={storyImage.prompt}>
+              <p className="my-8">
+                <strong>{storyImage.prompt}</strong>
+              </p>
+              <Image
+                src={storyImage.image}
+                alt={storyImage.prompt}
+                width={512}
+                height={512}
+                className="border shadow"
+              />
+            </div>
+          ))}
         </div>
       </main>
     </>
