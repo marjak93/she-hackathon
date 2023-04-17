@@ -83,17 +83,19 @@ const FairtalePage = ({ fairytale }: PageProps) => {
     <>
       <NavigationBar />
       <main className="pb-10">
+
         <div className="w-1/2 m-auto">
+
           <h1 className="mt-8">{title}</h1>
           <p className="mt-20">{generateText}</p>
+
+          {isLoading && <p>Loading...</p>}
           <button
-            className="p-10 m-5 text-white bg-red-900 rounded-md"
+            className="p-10 my-10 text-white bg-red-900 rounded-md"
             onClick={handleGenerateImages}
           >
-            Generate image
+            Let's see the story with images
           </button>
-          {isLoading && <p>Loading...</p>}
-
           {storyImages.map((storyImage) => (
             <div key={storyImage.prompt}>
               <p className="my-8">
@@ -104,7 +106,7 @@ const FairtalePage = ({ fairytale }: PageProps) => {
                 alt={storyImage.prompt}
                 width={512}
                 height={512}
-                className="border shadow"
+                className="m-auto border shadow"
               />
             </div>
           ))}
