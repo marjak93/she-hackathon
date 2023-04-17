@@ -32,7 +32,7 @@ export default async function handler(
     const aiResult = await openai.createImage({
       n: 1,
       prompt: promt,
-      size: '256x256',
+      size: '1024x1024',
     })
     const response = aiResult.data.data[0].url || "Sorry, I don't know"
     res.status(200).json({ text: response })

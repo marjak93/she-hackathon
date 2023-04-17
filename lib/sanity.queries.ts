@@ -7,7 +7,7 @@ const fairytaleFields = groq`
   content,
   "slug": slug.current,
   coverImage,
-  copiedPrompt
+  copiedPrompt,
   coverImage->{
     image.asset->url
   },
@@ -40,4 +40,5 @@ export interface iFairytale {
   content?: any
   story?: string
   generateText?: string
+  copiedPrompt?: string
 }

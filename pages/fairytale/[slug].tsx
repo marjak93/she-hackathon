@@ -26,12 +26,14 @@ const FairtalePage = ({ fairytale }: PageProps) => {
   const [storyImage, setStoryImage] = useState<any>('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const { title, story } = fairytale;
+  const { title, story, copiedPrompt } = fairytale;
+
+
 
 
   const generateNewStoryImage = async () => {
     // Add code here to genereate a new story image based on sanity data, be creative!
-    const imagePromt = story
+    const imagePromt = title
 
     try {
       const response = await fetch('/api/openai-image', {
@@ -44,22 +46,22 @@ const FairtalePage = ({ fairytale }: PageProps) => {
         }),
       }).then((res) => res.json())
 
-      console.log(response)
-
       if (response.text) {
         setStoryImage(response.text)
+
       } else {
         console.log('error')
       }
     } catch (err) {
       console.error(err)
-      return
     }
   }
 
   const handleGenerateImage = async () => {
     setIsLoading(true)
-    await generateNewStoryImage()
+    if (title) {
+      await generateNewStoryImage()
+    }
     setIsLoading(false)
   }
 
@@ -80,10 +82,9 @@ const FairtalePage = ({ fairytale }: PageProps) => {
 
 
 
-          {storyImage && storyImage.text !== "Sorry, I don't know" && (
-            <div>test</div>
-            // <Image src={storyImage} alt="" width={256} height={256} />
-          )}
+          {storyImage &&
+            <Image src={storyImage} alt="" width={256} height={256} />
+          }
         </div>
       </main>
     </>

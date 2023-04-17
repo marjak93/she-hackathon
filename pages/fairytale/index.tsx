@@ -20,7 +20,7 @@ const StoriesPage = ({ fairytales }: PageProps) => {
             Eventyr
           </h1>
           <div className="grid grid-cols-4 gap-4">
-            {fairytales.map((fairytale, i) => (
+            {/* {fairytales.map((fairytale, i) => (
               <Link href={`/fairytale/${fairytale.slug}`} key={i}>
                 <div className="relative aspect-1">
                   <Image
@@ -34,7 +34,7 @@ const StoriesPage = ({ fairytales }: PageProps) => {
                   {fairytale.title}
                 </h2>
               </Link>
-            ))}
+            ))} */}
           </div>
         </section>
       </main>
