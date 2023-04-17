@@ -1,6 +1,6 @@
 import { BookIcon } from '@sanity/icons'
 import OpenAISanity from 'components/OpenAISanity/OpenAISanity'
-import { defineField, defineType } from 'sanity'
+import { defineField, defineType, TextRule } from 'sanity'
 
 /**
  * This file is the schema definition for a post.
@@ -51,6 +51,12 @@ export default defineType({
         hotspot: true,
       },
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      type: "text",
+      title: "Copy the prompt to this field",
+      name: "copiedPrompt",
+      validation: (rule: TextRule) => rule.required().max(200).error("its to long...")
     }),
     defineField({
       name: 'generateText',
