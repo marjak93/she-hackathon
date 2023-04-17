@@ -23,12 +23,15 @@ const handleGenerateStory = async () => {
 }
 
 const FairtalePage = ({ fairytale }: PageProps) => {
-  const [storyImage, setStoryImage] = useState('')
+  const [storyImage, setStoryImage] = useState<any>('')
   const [isLoading, setIsLoading] = useState(false)
+
+  const { title, story } = fairytale;
+
 
   const generateNewStoryImage = async () => {
     // Add code here to genereate a new story image based on sanity data, be creative!
-    const imagePromt = 'placeholder'
+    const imagePromt = story
 
     try {
       const response = await fetch('/api/openai-image', {
@@ -41,6 +44,8 @@ const FairtalePage = ({ fairytale }: PageProps) => {
         }),
       }).then((res) => res.json())
 
+      console.log(response)
+
       if (response.text) {
         setStoryImage(response.text)
       } else {
@@ -48,6 +53,7 @@ const FairtalePage = ({ fairytale }: PageProps) => {
       }
     } catch (err) {
       console.error(err)
+      return
     }
   }
 
@@ -61,17 +67,24 @@ const FairtalePage = ({ fairytale }: PageProps) => {
     <>
       <NavigationBar />
       <main className="pb-10">
-        <button
-          className="px-2 m-5 rounded-md bg-slate-500"
-          onClick={handleGenerateImage}
-        >
-          Generate image
-        </button>
-        {isLoading && <p>Loading...</p>}
+        <div className='w-1/2 m-auto'>
+          <h1 className='mt-8'>{title}</h1>
+          <p className='mt-20'>{story}</p>
+          <button
+            className="p-10 m-5 text-white bg-red-900 rounded-md"
+            onClick={handleGenerateImage}
+          >
+            Generate image
+          </button>
+          {isLoading && <p>Loading...</p>}
 
-        {storyImage && (
-          <Image src={storyImage} alt="" width={256} height={256} />
-        )}
+
+
+          {storyImage && storyImage.text !== "Sorry, I don't know" && (
+            <div>test</div>
+            // <Image src={storyImage} alt="" width={256} height={256} />
+          )}
+        </div>
       </main>
     </>
   )

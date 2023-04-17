@@ -8,6 +8,9 @@ const fairytaleFields = groq`
   "slug": slug.current,
   coverImage,
   copiedPrompt
+  coverImage->{
+    image.asset->url
+  },
 `
 
 export const allFairyTalesQuery = groq`
